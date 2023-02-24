@@ -296,20 +296,20 @@ LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
 
     if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
       // Check for Ctrl+Alt+F4
-      if (vkey == VK_LCONTROL) {
+      if (vkey == VK_END) {
         ctrl = 1;
       }
-      else if (vkey == VK_LMENU) {
+      else if (vkey == VK_HOME) {
         alt = 1;
       }
       else if (ctrl && alt && vkey == VK_F4) {
         // Double check that Ctrl and Alt are being pressed.
         // This prevents a faulty kill if we didn't received the keyup for these keys.
-        if (!(GetAsyncKeyState(VK_LCONTROL)&0x8000)) {
+        if (!(GetAsyncKeyState(VK_END)&0x8000)) {
           ctrl = 0;
           return CallNextHookEx(NULL, nCode, wParam, lParam);
         }
-        else if (!(GetAsyncKeyState(VK_LMENU)&0x8000)) {
+        else if (!(GetAsyncKeyState(VK_HOME)&0x8000)) {
           alt = 0;
           return CallNextHookEx(NULL, nCode, wParam, lParam);
         }
@@ -338,7 +338,7 @@ LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
           return CallNextHookEx(NULL, nCode, wParam, lParam);
         }
         // Double check that the ctrl button is not being pressed
-        if (GetAsyncKeyState(VK_LCONTROL)&0x8000) {
+        if (GetAsyncKeyState(VK_END)&0x8000) {
           ctrl = 1;
           return CallNextHookEx(NULL, nCode, wParam, lParam);
         }
@@ -357,10 +357,10 @@ LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
     }
     else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
       killing = 0;
-      if (vkey == VK_LCONTROL) {
+      if (vkey == VK_END) {
         ctrl = 0;
       }
-      else if (vkey == VK_LMENU) {
+      else if (vkey == VK_HOME) {
         alt = 0;
       }
       else if (vkey == VK_LWIN) {
@@ -638,8 +638,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
   }
   else if (msg == WM_TIMER) {
     if (wParam == CHECKTIMER && ENABLED()) {
-      if (GetAsyncKeyState(VK_LCONTROL)&0x8000
-       && GetAsyncKeyState(VK_LMENU)&0x8000
+      if (GetAsyncKeyState(VK_END)&0x8000
+       && GetAsyncKeyState(VK_HOME)&0x8000
        && GetAsyncKeyState(VK_F4)&0x8000) {
         // Get hwnd of foreground window
         HWND hwnd = GetForegroundWindow();
